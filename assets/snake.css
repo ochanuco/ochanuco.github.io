@@ -45,13 +45,7 @@
 }
 
 .snake-wallpaper--idle .snake-wallpaper__hud {
-  gap: 0;
-  padding: 8px 12px;
-  border-color: rgba(255, 255, 255, 0.05);
-  background: rgba(8, 10, 24, 0.28);
-  color: rgba(243, 244, 251, 0.52);
-  font-size: 11px;
-  letter-spacing: 0.06em;
+  display: none;
 }
 
 .snake-wallpaper--idle .snake-wallpaper__score,
@@ -60,8 +54,7 @@
 }
 
 .snake-wallpaper--idle .snake-wallpaper__hint {
-  display: inline;
-  padding: 2px 0;
+  display: none;
 }
 
 .snake-wallpaper__score {
@@ -100,6 +93,15 @@
   color: var(--text);
 }
 
+.avatar-dotart {
+  transition: transform 140ms ease, filter 140ms ease;
+}
+
+.avatar-dotart--game-tap {
+  transform: scale(calc(1 + (var(--avatar-egg-progress, 1) * 0.016)));
+  filter: drop-shadow(0 0 calc(10px + (var(--avatar-egg-progress, 1) * 2px)) rgba(207, 214, 107, 0.28));
+}
+
 @media (max-width: 640px) {
   .snake-wallpaper__hud {
     left: 12px;
@@ -115,13 +117,7 @@
     display: none;
   }
 
-  .snake-wallpaper--idle .snake-wallpaper__hud {
-    left: auto;
-    right: 12px;
-    justify-content: flex-end;
-  }
-
   .snake-wallpaper--idle .snake-wallpaper__hint {
-    display: inline;
+    display: none;
   }
 }

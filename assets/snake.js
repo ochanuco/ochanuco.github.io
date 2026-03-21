@@ -10,6 +10,7 @@
   const speedMaxNode = wallpaper?.querySelector(".snake-wallpaper__speed-max");
   const hintNode = wallpaper?.querySelector(".snake-wallpaper__hint");
   const wallpaperAvatar = document.querySelector(".avatar-wallpaper__item");
+  const gameTriggerAvatars = Array.from(document.querySelectorAll(".avatar-dotart"));
 
   if (!wallpaper || !canvas || !playerScoreNode || !enemyCountNode || !enemyTargetNode || !foodStockNode || !maxScoreNode || !speedCurrentNode || !speedMaxNode || !hintNode) {
     return;
@@ -67,6 +68,12 @@
     tracking: false,
     handled: false,
   };
+  const avatarTapState = {
+    count: 0,
+    lastAt: 0,
+  };
+  const avatarTapWindow = 550;
+  const avatarFeedbackDurations = [0, 110, 150, 210];
 
   function getTotalSnakeLength() {
     return Object.values(state.snakes).reduce((sum, snake) => sum + (snake?.active === false ? 0 : snake.body.length), 0);
@@ -85,8 +92,31 @@
 
   function updateModeUi() {
     wallpaper.classList.toggle("snake-wallpaper--idle", !state.modeActive);
-    hintNode.textContent = state.modeActive ? "Quit" : "Game";
-    hintNode.setAttribute("aria-label", state.modeActive ? "Quit game mode" : "Start game mode");
+    hintNode.textContent = "Quit";
+    hintNode.setAttribute("aria-label", "Quit game mode");
+  }
+
+  function pulseAvatars(level) {
+    gameTriggerAvatars.forEach((avatar) => {
+      avatar.style.setProperty("--avatar-egg-progress", String(level));
+      avatar.classList.remove("avatar-dotart--game-tap");
+      void avatar.offsetWidth;
+      avatar.classList.add("avatar-dotart--game-tap");
+    });
+
+    window.setTimeout(() => {
+      gameTriggerAvatars.forEach((avatar) => {
+        avatar.classList.remove("avatar-dotart--game-tap");
+      });
+    }, avatarFeedbackDurations[level] ?? 140);
+  }
+
+  function vibrateFeedback(level, pointerType = "") {
+    if (pointerType === "mouse" || typeof navigator.vibrate !== "function") {
+      return;
+    }
+
+    navigator.vibrate(level >= 3 ? [40, 30, 60] : 18);
   }
 
   function clamp(value, min, max) {
@@ -569,6 +599,8 @@
 
   function enterGameMode() {
     state.modeActive = true;
+    avatarTapState.count = 0;
+    avatarTapState.lastAt = 0;
     updateModeUi();
     resetGame();
   }
@@ -581,9 +613,32 @@
     state.lastStepAt = 0;
     state.foodStock = initialFoodStock;
     state.gameOver = false;
+    avatarTapState.count = 0;
+    avatarTapState.lastAt = 0;
     updateModeUi();
     updateSpeed();
     updateScore();
+  }
+
+  function handleAvatarTap(timestamp) {
+    if (state.modeActive) {
+      return;
+    }
+
+    avatarTapState.count = timestamp - avatarTapState.lastAt <= avatarTapWindow
+      ? avatarTapState.count + 1
+      : 1;
+    avatarTapState.lastAt = timestamp;
+
+    pulseAvatars(avatarTapState.count);
+
+    if (avatarTapState.count < 3) {
+      return;
+    }
+
+    avatarTapState.count = 0;
+    avatarTapState.lastAt = 0;
+    enterGameMode();
   }
 
   function setDirection(snake, x, y) {
@@ -880,22 +935,24 @@
 
   hintNode.addEventListener("click", (event) => {
     event.preventDefault();
+    leaveGameMode();
+  });
 
-    if (state.modeActive) {
-      leaveGameMode();
-      return;
-    }
+  gameTriggerAvatars.forEach((avatar) => {
+    avatar.addEventListener("pointerup", (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) {
+        return;
+      }
 
-    enterGameMode();
+      const nextCount = performance.now() - avatarTapState.lastAt <= avatarTapWindow
+        ? avatarTapState.count + 1
+        : 1;
+      vibrateFeedback(nextCount, event.pointerType);
+      handleAvatarTap(performance.now());
+    });
   });
 
   window.addEventListener("keydown", (event) => {
-    if (event.key === "g" || event.key === "G") {
-      event.preventDefault();
-      enterGameMode();
-      return;
-    }
-
     if (event.key === "q" || event.key === "Q") {
       event.preventDefault();
       leaveGameMode();
