@@ -1,0 +1,89 @@
+:root {
+  --snake-panel: rgba(8, 10, 24, 0.68);
+}
+
+.snake-wallpaper {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.snake-wallpaper__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.snake-wallpaper__hud {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: var(--snake-panel);
+  color: rgba(243, 244, 251, 0.72);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(12px);
+}
+
+.snake-wallpaper__score {
+  color: var(--text);
+}
+
+.snake-wallpaper__score {
+  position: relative;
+  min-width: 3ch;
+  text-align: right;
+  padding-left: 14px;
+}
+
+.snake-wallpaper__score::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+}
+
+.snake-wallpaper__score--cpu::before {
+  background: #c97a44;
+}
+
+.snake-wallpaper__score--player::before {
+  background: #5aa864;
+}
+
+.snake-wallpaper__metric {
+  color: rgba(243, 244, 251, 0.72);
+}
+
+.snake-wallpaper__max-score,
+.snake-wallpaper__speed-current,
+.snake-wallpaper__speed-max {
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .snake-wallpaper__hud {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  .snake-wallpaper__hint {
+    display: none;
+  }
+}

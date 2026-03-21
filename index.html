@@ -6,9 +6,21 @@
     <title>おちゃぬ</title>
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png" />
     <link rel="stylesheet" href="./assets/index.css" />
+    <link rel="stylesheet" href="./assets/snake.css" />
     <link rel="stylesheet" href="./assets/avatar.css" />
   </head>
   <body>
+    <div class="snake-wallpaper" aria-hidden="true">
+      <canvas class="snake-wallpaper__canvas"></canvas>
+      <div class="snake-wallpaper__hud">
+        <span class="snake-wallpaper__score snake-wallpaper__score--cpu">000</span>
+        <span class="snake-wallpaper__score snake-wallpaper__score--player">000</span>
+        <span class="snake-wallpaper__metric">RND <span class="snake-wallpaper__round">001</span></span>
+        <span class="snake-wallpaper__metric">MAX <span class="snake-wallpaper__max-score">000</span></span>
+        <span class="snake-wallpaper__metric">SPD <span class="snake-wallpaper__speed-current">00</span>/<span class="snake-wallpaper__speed-max">00</span></span>
+        <span class="snake-wallpaper__hint">Esc reset</span>
+      </div>
+    </div>
     <div class="avatar-wallpaper" aria-hidden="true">
       <div class="avatar-dotart avatar-wallpaper__item"><span class="avatar-dotart__glyph"></span></div>
     </div>
@@ -63,6 +75,6 @@
         </section>
       </main>
     </div>
-
+    <script src="./assets/snake.js" defer></script>
   </body>
 </html>

@@ -13,7 +13,9 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at top, rgba(40, 54, 108, 0.4), transparent 45%),
+    linear-gradient(180deg, #11142a 0%, var(--bg) 60%);
   color: var(--text);
   font-family: "Iosevka Aile", "IBM Plex Sans JP", sans-serif;
   overflow-x: hidden;
@@ -27,7 +29,8 @@ a {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.06;
+  z-index: 0;
+  opacity: 0.08;
   overflow: hidden;
 }
 
@@ -125,7 +128,7 @@ p {
 
 @media (max-width: 640px) {
   .avatar-wallpaper {
-    opacity: 0.05;
+    opacity: 0.06;
   }
 
   .page {
